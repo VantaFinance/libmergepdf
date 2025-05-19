@@ -1,33 +1,40 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace iio\libmergepdf\Driver;
 
-use iio\libmergepdf\Source\SourceInterface;
 use iio\libmergepdf\Exception;
 use iio\libmergepdf\Pages;
+use iio\libmergepdf\Source\SourceInterface;
+use Prophecy\PhpUnit\ProphecyTrait;
+use TCPDI;
 
 class TcpdiDriverTest extends \PHPUnit\Framework\TestCase
 {
-    public function testExceptionOnFailure()
+    use ProphecyTrait;
+
+    public function testExceptionOnFailure(): void
     {
-        $tcpdi = $this->prophesize(\TCPDI::CLASS);
+        $tcpdi = $this->prophesize(TCPDI::class);
+
+
         $tcpdi->setSourceData('foobar')->willThrow(new \Exception('message'));
 
-        $source = $this->prophesize(SourceInterface::CLASS);
+        $source = $this->prophesize(SourceInterface::class);
         $source->getName()->willReturn('file');
         $source->getContents()->willReturn('foobar');
 
-        $this->expectException(Exception::CLASS);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage("'message' in 'file'");
+
 
         (new TcpdiDriver($tcpdi->reveal()))->merge($source->reveal());
     }
 
-    public function testMerge()
+    public function testMerge(): void
     {
-        $tcpdi = $this->prophesize(\TCPDI::CLASS);
+        $tcpdi = $this->prophesize(TCPDI::class);
 
         $tcpdi->setSourceData('data')->willReturn(2);
 
@@ -46,7 +53,7 @@ class TcpdiDriverTest extends \PHPUnit\Framework\TestCase
 
         $tcpdi->Output('', 'S')->willReturn('created-pdf');
 
-        $source = $this->prophesize(SourceInterface::CLASS);
+        $source = $this->prophesize(SourceInterface::class);
         $source->getName()->willReturn('');
         $source->getContents()->willReturn('data');
         $source->getPages()->willReturn(new Pages('1, 2'));

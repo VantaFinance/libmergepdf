@@ -1,22 +1,20 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace iio\libmergepdf\Driver;
 
 use iio\libmergepdf\Exception;
 use iio\libmergepdf\Source\SourceInterface;
+use TCPDI;
 
 final class TcpdiDriver implements DriverInterface
 {
-    /**
-     * @var \TCPDI
-     */
-    private $tcpdi;
+    private TCPDI $tcpdi;
 
-    public function __construct(\TCPDI $tcpdi = null)
+    public function __construct(?TCPDI $tcpdi = null)
     {
-        $this->tcpdi = $tcpdi ?: new \TCPDI;
+        $this->tcpdi = $tcpdi ?: new TCPDI();
     }
 
     public function merge(SourceInterface ...$sources): string
@@ -27,13 +25,13 @@ final class TcpdiDriver implements DriverInterface
             $tcpdi = clone $this->tcpdi;
 
             foreach ($sources as $source) {
-                $sourceName = $source->getName();
-                $pageCount = $tcpdi->setSourceData($source->getContents());
+                $sourceName  = $source->getName();
+                $pageCount   = $tcpdi->setSourceData($source->getContents());
                 $pageNumbers = $source->getPages()->getPageNumbers() ?: range(1, $pageCount);
 
                 foreach ($pageNumbers as $pageNr) {
                     $template = $tcpdi->importPage($pageNr);
-                    $size = $tcpdi->getTemplateSize($template);
+                    $size     = $tcpdi->getTemplateSize($template);
                     $tcpdi->SetPrintHeader(false);
                     $tcpdi->SetPrintFooter(false);
                     $tcpdi->AddPage(

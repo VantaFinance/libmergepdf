@@ -1,14 +1,14 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace iio\libmergepdf;
 
-use iio\libmergepdf\Driver\DriverInterface;
 use iio\libmergepdf\Driver\DefaultDriver;
-use iio\libmergepdf\Source\SourceInterface;
+use iio\libmergepdf\Driver\DriverInterface;
 use iio\libmergepdf\Source\FileSource;
 use iio\libmergepdf\Source\RawSource;
+use iio\libmergepdf\Source\SourceInterface;
 
 /**
  * Merge existing pdfs into one
@@ -18,24 +18,22 @@ use iio\libmergepdf\Source\RawSource;
 final class Merger
 {
     /**
-     * @var SourceInterface[] List of pdf sources to merge
+     * @var SourceInterface[]
      */
-    private $sources = [];
+    private array $sources;
 
-    /**
-     * @var DriverInterface
-     */
-    private $driver;
+    private DriverInterface $driver;
 
-    public function __construct(DriverInterface $driver = null)
+    public function __construct(?DriverInterface $driver = null)
     {
-        $this->driver = $driver ?: new DefaultDriver;
+        $this->driver  = $driver ?: new DefaultDriver();
+        $this->sources = [];
     }
 
     /**
      * Add raw PDF from string
      */
-    public function addRaw(string $content, PagesInterface $pages = null): void
+    public function addRaw(string $content, ?PagesInterface $pages = null): void
     {
         $this->sources[] = new RawSource($content, $pages);
     }
@@ -43,7 +41,7 @@ final class Merger
     /**
      * Add PDF from file
      */
-    public function addFile(string $filename, PagesInterface $pages = null): void
+    public function addFile(string $filename, ?PagesInterface $pages = null): void
     {
         $this->sources[] = new FileSource($filename, $pages);
     }
@@ -54,7 +52,7 @@ final class Merger
      * @param iterable<string> $iterator Set of filenames to add
      * @param PagesInterface $pages Optional pages constraint used for every added pdf
      */
-    public function addIterator(iterable $iterator, PagesInterface $pages = null): void
+    public function addIterator(iterable $iterator, ?PagesInterface $pages = null): void
     {
         foreach ($iterator as $filename) {
             $this->addFile($filename, $pages);
@@ -63,6 +61,8 @@ final class Merger
 
     /**
      * Merges loaded PDFs
+     *
+     * @throws Exception
      */
     public function merge(): string
     {

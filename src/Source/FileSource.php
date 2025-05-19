@@ -1,36 +1,33 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace iio\libmergepdf\Source;
 
-use iio\libmergepdf\PagesInterface;
-use iio\libmergepdf\Pages;
 use iio\libmergepdf\Exception;
+use iio\libmergepdf\Pages;
+use iio\libmergepdf\PagesInterface;
 
 /**
  * Pdf source from file
  */
 final class FileSource implements SourceInterface
 {
-    /**
-     * @var string
-     */
-    private $filename;
+    private string $filename;
+
+    private PagesInterface $pages;
 
     /**
-     * @var PagesInterface
+     * @throws Exception
      */
-    private $pages;
-
-    public function __construct(string $filename, PagesInterface $pages = null)
+    public function __construct(string $filename, ?PagesInterface $pages = null)
     {
         if (!is_file($filename) || !is_readable($filename)) {
             throw new Exception("Invalid file '$filename'");
         }
 
         $this->filename = $filename;
-        $this->pages = $pages ?: new Pages;
+        $this->pages    = $pages ?: new Pages();
     }
 
     public function getName(): string
