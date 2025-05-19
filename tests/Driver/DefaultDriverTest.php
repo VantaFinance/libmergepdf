@@ -8,8 +8,12 @@ use iio\libmergepdf\Source\SourceInterface;
 
 use function PHPUnit\Framework\assertInstanceOf;
 
+use Prophecy\PhpUnit\ProphecyTrait;
+
 class DefaultDriverTest extends \PHPUnit\Framework\TestCase
 {
+    use ProphecyTrait;
+
     public function testMerge(): void
     {
         $wrapped = $this->prophesize(DriverInterface::class);
