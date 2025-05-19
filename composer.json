@@ -1,14 +1,17 @@
 {
-    "name": "iio/libmergepdf",
+    "name": "vanta/libmergepdf",
     "description": "Library for merging multiple PDFs",
     "keywords": ["pdf", "merge"],
-    "homepage": "https://github.com/hanneskod/libmergepdf",
     "type": "library",
     "license": "WTFPL",
     "authors": [
         {
             "name": "Hannes Forsgård",
             "email": "hannes.forsgard@fripost.org"
+        },
+        {
+            "name": "Vanta Team",
+            "homepage": "https://vanta.ru"
         }
     ],
     "autoload": {

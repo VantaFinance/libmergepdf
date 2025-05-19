@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace iio\libmergepdf\Driver;
 
 use iio\libmergepdf\Source\SourceInterface;
-
-use function PHPUnit\Framework\assertInstanceOf;
-
 use Prophecy\PhpUnit\ProphecyTrait;
 
 class DefaultDriverTest extends \PHPUnit\Framework\TestCase
@@ -23,11 +20,7 @@ class DefaultDriverTest extends \PHPUnit\Framework\TestCase
 
         $wrapped->merge($source1, $source2)->willReturn('foo')->shouldBeCalled();
 
-        $newDriver = $wrapped->reveal();
-
-        assertInstanceOf(DriverInterface::class, $newDriver);
-
-        $driver = new DefaultDriver($newDriver);
+        $driver = new DefaultDriver($wrapped->reveal());
 
         $this->assertEquals(
             'foo',

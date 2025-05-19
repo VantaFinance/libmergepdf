@@ -1,4 +1,4 @@
-name: Integration-Testing CI
+name: Behat-Testing CI
 on: [ push, pull_request ]
 
 jobs:

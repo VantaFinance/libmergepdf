@@ -1,4 +1,4 @@
-name: Integration-Testing CI
+name: Phpunit-Testing CI
 on: [ push, pull_request ]
 
 jobs:
