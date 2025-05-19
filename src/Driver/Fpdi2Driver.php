@@ -27,7 +27,7 @@ final class Fpdi2Driver implements DriverInterface
         // suppressing errors is a dirty hack until tcpdf is patched
         $this->fpdi = $fpdi ?: @new FpdiTcpdf();
 
-        if ($fpdi == null) {
+        if ($this->fpdi == null) {
             throw new InvalidArgumentException('Constructor argument must be an FPDI instance.');
         }
     }
