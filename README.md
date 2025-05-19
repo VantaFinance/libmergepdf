@@ -5,7 +5,7 @@ PHP library for merging multiple PDFs.
 ## Installation
 
 ```shell
-composer require iio/libmergepdf
+composer require vanta/libmergepdf
 ```
 
 ## Usage
