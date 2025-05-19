@@ -1,41 +1,15 @@
-BEHAT:=$(shell command -v behat 2> /dev/null)
-PHPCS:=$(shell command -v phpcs 2> /dev/null)
-COMPOSER_CMD:=$(shell command -v composer 2> /dev/null)
+fix-code-style:
+	@vendor/bin/php-cs-fixer fix --allow-risky=yes --verbose --using-cache=no
 
-.DEFAULT_GOAL=all
+lint-code-style:
+	@vendor/bin/php-cs-fixer fix --allow-risky=yes --dry-run --stop-on-violation --diff --using-cache=no
 
-.PHONY: all
-all: test phpcs
+analysis-code:
+	@php -d memory_limit=-1 vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=-1
 
-.PHONY: clean
-clean:
-	rm -rf vendor
-	rm -f composer.lock
+testing:
+	./vendor/bin/phpunit
 
-.PHONY: test
-test: phpunit behat
 
-.PHONY: phpunit
-phpunit: composer.lock
-	vendor/bin/phpunit
-
-.PHONY: behat
-behat: composer.lock
-ifndef BEHAT
-    $(error "behat is not available, please install to continue")
-endif
-	behat --stop-on-failure
-
-.PHONY: phpcs
-phpcs: composer.lock
-ifndef PHPCS
-    $(error "phpcs is not available, please install to continue")
-endif
-	phpcs src --standard=PSR2
-	phpcs tests --standard=PSR2
-
-composer.lock: composer.json
-ifndef COMPOSER_CMD
-    $(error "composer is not available, please install to continue")
-endif
-	composer install
+testing-behat:
+	./vendor/bin/behat

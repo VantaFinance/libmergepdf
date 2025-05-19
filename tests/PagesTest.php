@@ -1,15 +1,19 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace iio\libmergepdf;
 
 class PagesTest extends \PHPUnit\Framework\TestCase
 {
     /**
+     * @param array<int> $expected
+     *
      * @dataProvider pageNumbersProvider
+     *
+     * @throws Exception
      */
-    public function testPageNumbers($expressionString, array $expected)
+    public function testPageNumbers(string $expressionString, array $expected): void
     {
         $this->assertSame(
             $expected,
@@ -17,7 +21,11 @@ class PagesTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function pageNumbersProvider()
+
+    /**
+     * @return array<int, list<list<int>|string>>
+     */
+    public function pageNumbersProvider(): array
     {
         return [
             ['', []],
@@ -30,9 +38,9 @@ class PagesTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function testInvalidString()
+    public function testInvalidString(): void
     {
-        $this->expectException(Exception::CLASS);
+        $this->expectException(Exception::class);
         new Pages('12,*');
     }
 }

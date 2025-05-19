@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace iio\libmergepdf\Driver;
 
 use iio\libmergepdf\Source\SourceInterface;

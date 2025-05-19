@@ -1,0 +1,27 @@
+name: Integration-Testing CI
+on: [ push, pull_request ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.operating-system }}
+    name: PHP ${{ matrix.php }}
+    strategy:
+      matrix:
+        operating-system: [ ubuntu-latest ]
+        php: [ 7.4, 8.0, 8.1, 8.2, 8.3, 8.4]
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: flex
+          extensions: opcache,zip
+
+      - name: Download dependencies
+        uses: ramsey/composer-install@v1
+
+      - name: Run test suite on PHP ${{ matrix.php }}
+        run: ./vendor/bin/phpunit

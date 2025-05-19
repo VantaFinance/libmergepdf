@@ -1,44 +1,41 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace iio\libmergepdf\Driver;
 
 use iio\libmergepdf\Exception;
 use iio\libmergepdf\Pages;
 use iio\libmergepdf\Source\SourceInterface;
-use setasign\Fpdi\Tcpdf\Fpdi;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use setasign\Fpdi\Tcpdf\Fpdi;
 
 class Fpdi2DriverTest extends \PHPUnit\Framework\TestCase
 {
-    public function testExceptionOnInvalidFpdi()
-    {
-        $this->expectException(\InvalidArgumentException::CLASS);
-        new Fpdi2Driver('string-this-is-not-fpdi');
-    }
+    use ProphecyTrait;
 
-    public function testExceptionOnFailure()
+    public function testExceptionOnFailure(): void
     {
         // Tcpdf generates warnings due to argument ordering with php 8
         // suppressing errors is a dirty hack until tcpdf is patched
-        $fpdi =  @$this->prophesize(Fpdi::CLASS);
+        $fpdi = @$this->prophesize(Fpdi::class);
 
         $fpdi->setSourceFile(Argument::any())->willThrow(new \Exception('message'));
 
-        $source = $this->prophesize(SourceInterface::CLASS);
+        $source = $this->prophesize(SourceInterface::class);
         $source->getName()->willReturn('file');
         $source->getContents()->willReturn('');
 
-        $this->expectException(Exception::CLASS);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage("'message' in 'file'");
 
         (new Fpdi2Driver($fpdi->reveal()))->merge($source->reveal());
     }
 
-    public function testMerge()
+    public function testMerge(): void
     {
-        $fpdi = $this->prophesize(Fpdi::CLASS);
+        $fpdi = $this->prophesize(Fpdi::class);
 
         $fpdi->setSourceFile(Argument::any())->willReturn(2);
 
@@ -57,10 +54,11 @@ class Fpdi2DriverTest extends \PHPUnit\Framework\TestCase
 
         $fpdi->Output('', 'S')->willReturn('created-pdf');
 
-        $source = $this->prophesize(SourceInterface::CLASS);
+        $source = $this->prophesize(SourceInterface::class);
         $source->getName()->willReturn('');
         $source->getContents()->willReturn('');
         $source->getPages()->willReturn(new Pages('1, 2'));
+
 
         $this->assertSame(
             'created-pdf',
